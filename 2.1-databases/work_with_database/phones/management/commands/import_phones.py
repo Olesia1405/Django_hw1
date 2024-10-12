@@ -13,5 +13,15 @@ class Command(BaseCommand):
             phones = list(csv.DictReader(file, delimiter=';'))
 
         for phone in phones:
-            # TODO: Добавьте сохранение модели
-            pass
+             # Создаем объект модели Phone на основе данных из CSV-файла
+            phone_obj = Phone(
+                id=phone['id'],
+                name=phone['name'],
+                price=phone['price'],
+                image=phone['image'],
+                release_date=phone['release_date'],
+                lte_exists=phone['lte_exists'],
+                slug=phone['slug']
+            )
+            # Сохраняем объект модели в базу данных
+            phone_obj.save()
