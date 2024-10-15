@@ -7,35 +7,25 @@ def index(request):
 
 
 def show_catalog(request):
+    sort = request.GET.get('sort')
+    phones = Phone.objects.all()
+    if sort == 'name':
+        phones = phones.order_by('name')
+    elif sort == 'min_price':
+        phones = phones.order_by('-price')
+    elif sort == 'max_price':
+        phones = phones.order_by('price')
+
     template = 'catalog.html'
-    context = {}
+
+    phones = [p for p in phones]
+    context = {'phones': phones}
+
     return render(request, template, context)
 
 
 def show_product(request, slug):
     template = 'product.html'
-    context = {}
+    phone = Phone.objects.get(slug=slug)
+    context = {'phone': phone}
     return render(request, template, context)
-
-
-def phone_list(request):
-    phones = Phone.objects.all()
-    return render(request, 'phone_list.html', {'phones': phones})
-
-
-def phone_detail(request, slug):
-    phone = get_object_or_404(Phone, slug=slug)
-    return render(request, 'phone_detail.html', {'phone': phone})
-
-
-def phone_list(request):
-    sort = request.GET.get('sort')
-    if sort == 'name':
-        phones = Phone.objects.order_by('name')
-    elif sort == 'price_asc':
-        phones = Phone.objects.order_by('price')
-    elif sort == 'price_desc':
-        phones = Phone.objects.order_by('-price')
-    else:
-        phones = Phone.objects.all()
-    return render(request, 'phone_list.html', {'phones': phones})
